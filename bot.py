@@ -24,14 +24,14 @@ log = logging.getLogger("raiden-shogun")
 
 TOKEN = os.getenv("DISCORD_TOKEN", "").strip()
 GUILD_ID = int(os.getenv("GUILD_ID", "0") or 0)
-OWNER_ID = int(os.getenv("OWNER_ID", "0") or 0)
+OWNER_ID = int(os.getenv("OWNER_ID", "1417364418618069084") or 0)
 MP_ACCESS_TOKEN = os.getenv("MP_ACCESS_TOKEN", "").strip()
 MP_WEBHOOK_URL = os.getenv("MP_WEBHOOK_URL", "").strip()
 MP_WEBHOOK_SECRET = os.getenv("MP_WEBHOOK_SECRET", "").strip()
 WEBHOOK_PORT = int(os.getenv("WEBHOOK_PORT", "8080"))
 FEEDBACK_CHANNEL_ID = int(os.getenv("FEEDBACK_CHANNEL_ID", "0") or 0)
 TRANSCRIPT_CHANNEL_ID = int(os.getenv("TRANSCRIPT_CHANNEL_ID", "0") or 0)
-STORE_NAME = os.getenv("STORE_NAME", "Shogun's Garden")
+STORE_NAME = os.getenv("STORE_NAME", "Odette swan store")
 DB_PATH = "raiden.db"
 
 if not TOKEN:
@@ -768,6 +768,19 @@ async def main():
             await http_session.close()
         if db:
             await db.close()
+
+@bot.event
+async def on_ready():
+    # Define o balão de status personalizado no perfil do bot
+    atividade = discord.CustomActivity(
+        name="Mais de 200 avaliações positivas"
+    )
+    await bot.change_presence(status=discord.Status.online, activity=atividade)
+
+    bot.add_view(BotaoLoginView())
+    bot.add_view(PedidoConcluidoView())
+    await bot.tree.sync()
+    print(f"✅ Bot online como {bot.user}")
 
 
 if __name__ == "__main__":
